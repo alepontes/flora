@@ -1,0 +1,12 @@
+{
+  "name": "flora",
+  "displayName": "flora",
+  "expo": {
+    "name": "flora",
+    "slug": "flora",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
