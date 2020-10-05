@@ -1,10 +1,53 @@
-import React from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import { Services } from '../../services/service';
+
+const loadingComponent = () => {
+    return (
+        <View style={styles.loadingConteiner}>
+            <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+    );
+}
+
+const content = (title: string, percentage: string, info: string) => {
+    return (
+        <View style={styles.content}>
+            <View style={styles.header}>
+                <Text style={styles.title}>{ title }</Text>
+                <Text style={styles.subtitle}>{percentage}%</Text>
+            </View>
+
+            <Text style={styles.info}>
+              { info }
+            </Text>
+        </View>
+    );
+}
 
 
 export default function DetailsScreen({ route }) {
 
     const { photo } = route.params;
+
+    const service = new Services();
+    const labels = service.getContentByImage(photo);
+    const label = service.selectLabel(labels);
+
+    const [loading, setLoading] = useState(true);
+
+    const [title, setTitle] = useState('');
+    const [info, setInfo] = useState('');
+
+    service.getInfo(label)
+        .then(({ title, extract }) => {
+            setTitle(title);
+            setInfo(extract);
+            setLoading(false);
+        })
+        .then(response => {
+            console.log('ERRO');
+        })
 
     return (
         <View style={styles.container}>
@@ -17,16 +60,7 @@ export default function DetailsScreen({ route }) {
                 />
             </View>
 
-            <View style={styles.content}>
-                <View style={styles.header}>
-                    <Text style={styles.title}>Tulipa</Text>
-                    <Text style={styles.subtitle}>87%</Text>
-                </View>
-
-                <Text style={styles.info}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </Text>
-            </View>
+            { loading ? loadingComponent() : content(title, label.Confidence.toFixed(), info) }
 
         </View>
     );
@@ -81,5 +115,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
         paddingLeft: 10,
         paddingRight: 10,
+    },
+    loadingConteiner: {
+        flex: 1,
+        justifyContent: 'center',
     }
 });

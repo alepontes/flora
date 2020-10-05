@@ -11,6 +11,7 @@
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/native": "^5.7.5",
     "@react-navigation/stack": "^5.9.2",
+    "aws-sdk": "^2.766.0",
     "expo": "~39.0.2",
     "expo-camera": "~9.0.0",
     "expo-splash-screen": "~0.6.2",

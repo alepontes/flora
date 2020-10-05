@@ -4,8 +4,8 @@ import * as React from 'react';
 import { View, Text, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
-import Cam from './src/cam';
-import Resume from './src/resume';
+import Cam from './src/pages/cam';
+import Resume from './src/pages/resume';
 
 const Stack = createStackNavigator();
 
