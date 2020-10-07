@@ -30,24 +30,30 @@ export default function DetailsScreen({ route }) {
 
     const { photo } = route.params;
 
-    const service = new Services();
-    const labels = service.getContentByImage(photo);
-    const label = service.selectLabel(labels);
-
     const [loading, setLoading] = useState(true);
 
     const [title, setTitle] = useState('');
     const [info, setInfo] = useState('');
 
-    service.getInfo(label)
-        .then(({ title, extract }) => {
-            setTitle(title);
-            setInfo(extract);
-            setLoading(false);
-        })
-        .then(response => {
-            console.log('ERRO');
-        })
+
+    const { getContentByImage, selectLabel, getInfo } = (new Services());
+
+    useEffect(() => {
+      // Update the document title using the browser API
+      getContentByImage(photo)
+      .then(selectLabel)
+      .then(getInfo)
+      .then((response: any) => {
+          const { title, extract } = response;
+          setTitle(title);
+          setInfo(extract);
+          setLoading(false);
+      })
+      .then(error => {
+          console.log('ERRO AO CHAMAR WIKIPEDIA');
+          console.log(error);
+      });
+    });
 
     return (
         <View style={styles.container}>
@@ -60,7 +66,7 @@ export default function DetailsScreen({ route }) {
                 />
             </View>
 
-            { loading ? loadingComponent() : content(title, label.Confidence.toFixed(), info) }
+            { loading ? loadingComponent() : content(title, '99', info) }
 
         </View>
     );

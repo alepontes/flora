@@ -14,6 +14,7 @@
     "aws-sdk": "^2.766.0",
     "expo": "~39.0.2",
     "expo-camera": "~9.0.0",
+    "expo-file-system": "~9.2.0",
     "expo-splash-screen": "~0.6.2",
     "expo-updates": "~0.3.3",
     "react": "16.13.1",
