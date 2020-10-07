@@ -1,8 +1,44 @@
-// var AWS = require('aws-sdk/dist/aws-sdk-react-native');
+import AWS from 'aws-sdk';
 
+const config = {
+    apiVersion: '2016-06-27',
+    region: 'us-west-2',
+    accessKeyId: 'AKIAJOV6SIDP7VHSC6BQ',
+    secretAccessKey: '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',
+}
+
+const rekognition = new AWS.Rekognition(config);
+  
 export class Services {
     
     getContentByImage(image: any): object {
+
+        const params = {
+            Image: {
+                Bytes: Buffer.from(image.uri),
+                // Bytes: image.uri,
+                // Bytes: img,
+                // S3Object: {
+                //     Bucket: "mybucket", 
+                //     Name: "myphoto"
+                // }
+            }, 
+            MaxLabels: 10, 
+            MinConfidence: 70
+        };
+
+        rekognition.detectLabels(params, (err: any, data: any) => {
+
+            if (err) {
+                console.log('ERRO detectLabels');
+                console.log(err);
+                console.log(err.stack);
+            }
+
+            console.log('DATA detectLabels');
+            console.log(data);
+        });
+
         return {
             "Labels": [
                 {
