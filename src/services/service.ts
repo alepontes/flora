@@ -1,4 +1,6 @@
 import AWS from 'aws-sdk';
+import * as FileSystem from 'expo-file-system';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const config = {
     apiVersion: '2016-06-27',
@@ -115,37 +117,35 @@ const mockLabels = {
 };
   
 export class Services {
+
+    // https://docs.expo.io/versions/latest/sdk/filesystem/#filesystemgetcontenturiasyncfileuri
+    // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Rekognition.html#detectLabels-property
     
     async getContentByImage(image: any) {
-
         return new Promise(async (resolve, reject) => {
+
+            const blob = await this.getBlob(image.uri);
+
+            console.log('blob');
+            console.log(blob);
 
             const params = {
                 Image: {
-                    Bytes: await this.getBlob(image.uri),
-                    // Bytes: image.uri,
-                    // Bytes: img,
-                    // S3Object: {
-                    //     Bucket: "mybucket", 
-                    //     Name: "myphoto"
-                    // }
+                    Bytes: blob,
                 }, 
                 MaxLabels: 10, 
                 MinConfidence: 70
             };
     
-
             rekognition.detectLabels(params, (err: any, data: any) => {
 
                 if (err) {
                     console.log('ERRO detectLabels');
                     console.log(err);
-                    console.log(err.stack);
+                    // console.log(err.stack);
                     resolve(mockLabels);
                 }
     
-                console.log('DATA detectLabels');
-                console.log(data);
                 resolve(data);
             });
         });
@@ -171,7 +171,7 @@ export class Services {
         return new Promise(async (resolve, reject) => {
             const response1 = await fetch(`https://en.wikipedia.org/w/api.php?origin=*&action=opensearch&search=${label.Name}`);
             if (!response1.ok) {
-                console.log(response1.statusText);
+                // console.log(response1.statusText);
                 // throw Error(response1.statusText);
                 console.log('ERRO WIKI 1');
             }
@@ -197,8 +197,8 @@ export class Services {
         });
     }
 
-    private async getBlob(image: any) {
-        return '';
+    async getBlob(image: any) {
+        // FIXME: Resolver aqui
+        return FileSystem.readAsStringAsync(image, { encoding: FileSystem.EncodingType.UTF8 });
     }
 }
-
