@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
-import { Camera } from 'expo-camera';
+import { Text, View, TouchableOpacity, Platform } from 'react-native';
+// import { Camera } from 'expo-camera';
+import Camera from 'expo-camera/build/Camera';
 
 export default function Cam({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   let camera: any;
 
+
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
+      if (Platform.OS === 'web') {
+        setHasPermission(true);
+      } else {
+        const { status } = await Camera.requestPermissionsAsync();
+        setHasPermission(status === 'granted');
+      }
     })();
   }, []);
 

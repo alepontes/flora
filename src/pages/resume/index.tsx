@@ -39,7 +39,6 @@ export default function DetailsScreen({ route }) {
     const { getContentByImage, selectLabel, getInfo } = (new Services());
 
     useEffect(() => {
-      // Update the document title using the browser API
       getContentByImage(photo)
       .then(selectLabel)
       .then(getInfo)
@@ -74,39 +73,21 @@ export default function DetailsScreen({ route }) {
 
 const styles = StyleSheet.create({
     container: {
-        // position: 'relative',
         flex: 1, 
-        // flexDirection: 'row',
-        // alignItems: 'center', 
-        // justifyContent: 'center' 
     },
     imageContainer: {
-        // flex: 1,
         zIndex: 10,
         backgroundColor: 'red',
-        // width: '100%',
-        // height: 30,
     },
     image: {
-        // flex: 1, 
-        // alignItems: 'center', 
-        // justifyContent: 'center',
-        // backgroundColor: 'red',
         width: '100%',
         height: 300,
     },
     content: {
         flex: 2,
-        // backgroundColor: '#E8B391',
-        // zIndex: 10,
-        // flex: 1,
-        // flexDirection: 'row',
-        // justifyContent: 'center'
     },
     header: {
-        // flex: 1,
         flexDirection: 'row',
-        // backgroundColor: '#5488FF',
         padding: 10,
         alignItems: 'baseline',
     },

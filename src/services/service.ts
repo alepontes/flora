@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk';
 import * as FileSystem from 'expo-file-system';
-import RNFetchBlob from 'rn-fetch-blob';
+// import RNFetchBlob from 'rn-fetch-blob';
+// import RNFS from 'react-native-fs';
 
 const config = {
     apiVersion: '2016-06-27',
@@ -11,6 +12,10 @@ const config = {
 
 const rekognition = new AWS.Rekognition(config);
 import { Buffer } from 'buffer';
+import { DetectLabelsRequest } from 'aws-sdk/clients/rekognition';
+import { Base64EncodedString } from 'aws-sdk/clients/elastictranscoder';
+import { Base64 } from 'aws-sdk/clients/ecr';
+import ImgToBase64 from 'react-native-image-base64';
 
 const mockLabels = {
     "Labels": [
@@ -124,15 +129,15 @@ export class Services {
     async getContentByImage(image: any) {
         return new Promise(async (resolve, reject) => {
 
-            const blob = await this.getBlob(image.uri);
-
-            console.log('blob');
-            console.log(blob);
-
-            const params = {
+            const params: DetectLabelsRequest = {
                 Image: {
-                    Bytes: blob,
-                }, 
+                    Bytes: await FileSystem.readAsStringAsync(image.uri, { encoding: FileSystem.EncodingType.Base64 }),
+                    // "S3Object": { 
+                    //     "Bucket": "orb-staging",
+                    //     "Name": "businesses/1001-kcrvg5df.jpg",
+                    //     // "Version": "string"
+                    //  }
+                },
                 MaxLabels: 10, 
                 MinConfidence: 70
             };
@@ -142,10 +147,11 @@ export class Services {
                 if (err) {
                     console.log('ERRO detectLabels');
                     console.log(err);
-                    // console.log(err.stack);
                     resolve(mockLabels);
                 }
     
+                console.log('data');
+                console.log(data);
                 resolve(data);
             });
         });
@@ -197,8 +203,17 @@ export class Services {
         });
     }
 
-    async getBlob(image: any) {
-        // FIXME: Resolver aqui
-        return FileSystem.readAsStringAsync(image, { encoding: FileSystem.EncodingType.UTF8 });
+    async getBase64(uri: any): Promise<any> {
+        const img = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+        return new Promise((resolve, reject) => {
+            ImgToBase64.getBase64String(img)
+                .then((base64String: any) => {
+                    console.log('base64String');
+                    console.log(base64String);
+                    resolve(base64String)
+                })
+                .catch((err: any) => reject(err));
+        });
     }
+
 }
