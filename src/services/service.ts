@@ -1,13 +1,12 @@
 import AWS from 'aws-sdk';
 import * as FileSystem from 'expo-file-system';
-// import RNFetchBlob from 'rn-fetch-blob';
-// import RNFS from 'react-native-fs';
+import { apiVersion, region, accessKeyId, secretAccessKey } from 'react-native-dotenv';
 
 const config = {
-    apiVersion: '2016-06-27',
-    region: 'us-west-2',
-    accessKeyId: 'AKIAJOV6SIDP7VHSC6BQ',
-    secretAccessKey: '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',
+    apiVersion,
+    region,
+    accessKeyId,
+    secretAccessKey,
 }
 
 const rekognition = new AWS.Rekognition(config);
